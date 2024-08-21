@@ -7,10 +7,31 @@ router.get('/sort/:key', (req, res) => {
     const keyName = req.params.key;
     const rawData = fs.readFileSync('GameData.json');
     var data = JSON.parse(rawData);
-    const playersKeys = data["players"].map((item, itemId) => {
-        for (var i = 0; i < item.length; i++) {
-            if (item[i]["name"] === keyName) return itemId;
-        }
+
+    /* Функция поиска параметра по названию */
+    function findKeyByName(in_Struct, in_Name) {
+        try {
+            for (var i = 0; i < in_Struct.length; i++) {
+                if (in_Struct[i]["name"] === in_Name) {
+                    return in_Struct[i]["value"];
+                }
+            }
+        } catch (e) { return -1; }
+    }
+
+    /* Получение массива игроков */
+    let playersKeys = data["players"].map((item, itemId) => {
+        const _ingame = findKeyByName(item, "В игре");
+        return _ingame ? itemId : -1;
+    });
+    playersKeys = playersKeys.filter((item) => item > -1);
+
+    /* Сортировка по параметру */
+    playersKeys = playersKeys.sort((a, b) => {
+        let _aValue = findKeyByName(data["players"][a], keyName),
+            _bValue = findKeyByName(data["players"][b], keyName);
+
+        return _bValue - _aValue;
     });
 
     data["turn"]["turnOrder"] = playersKeys;

@@ -22,6 +22,17 @@ router.post('/id=:id', (req, res) => {
     res.json({ message: 'Data saved successfully' });
 });
 
+/* Удаление игрока по id */
+router.post('/remove/id=:id', (req, res) => {
+    const playerId = parseInt(req.params.id);
+    const rawData = fs.readFileSync('GameData.json');
+    var data = JSON.parse(rawData);
+    data["players"].splice(playerId, 1);
+    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    res.json({ message: 'Data saved successfully' });
+});
+
+
 /* Чтение массива игроков */
 router.get('/', (req, res) => {
     const rawData = fs.readFileSync('GameData.json');

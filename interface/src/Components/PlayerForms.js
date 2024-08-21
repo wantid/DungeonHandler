@@ -1,6 +1,8 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Button, Form, Row, Col, InputGroup, Accordion, Dropdown } from 'react-bootstrap';
 
+import TimedButton from './TimedButton';
+
 export const PlayerCreate = () => {
     const [formData, setFormData] = useState([]);
     const [templates, setTemplates] = useState([]);
@@ -46,6 +48,7 @@ export const PlayerCreate = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            if (formData.length === 0) return;
             const response = await fetch(`http://${window.location.hostname}:3010/api/players/create`, {
                 method: 'POST',
                 headers: {
@@ -66,7 +69,7 @@ export const PlayerCreate = () => {
                 console.log("e.target.value", e.target.value);
                 chooseTemplate(e.target.value);
             }}>
-                <option>- не выбран шаблон -</option>
+                <option key={"none"}>{"--- не выбран шаблон ---"}</option>
                 {templates.map((item, i) =>
                     <option key={i} value={item}>{item}</option>
                 )}
@@ -154,6 +157,23 @@ export const PlayersList = forwardRef((props, ref) => {
         }
     };
 
+    /* Удаление персонажа */
+    const handleRemovePlayer = async (playerId) => {
+        try {
+            const response = await fetch(`http://${window.location.hostname}:3010/api/players/remove/id=${playerId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const result = await response.json();
+            handleUpdate();
+            console.log(result); // Ответ от сервера
+        } catch (error) {
+            console.error('Ошибка при отправке данных:', error);
+        }
+    };
+
     return (
         <>
             <Accordion defaultActiveKey="0">
@@ -174,6 +194,9 @@ export const PlayersList = forwardRef((props, ref) => {
                                         </Col>
                                     ) : <p>Неправильно задан игрок id={i}</p>}
                                 </Row>
+                                <Button variant="danger" onClick={() => handleRemovePlayer(i)} size="lg">
+                                    Удалить персонажа
+                                </Button>
                             </Form>
                         </Accordion.Body>
                     </Accordion.Item>
@@ -184,6 +207,66 @@ export const PlayersList = forwardRef((props, ref) => {
                     Обновить
                 </Button>
             </div>
+        </>
+    );
+});
+
+export const PlayerView = forwardRef((props, ref) => {
+    const [playersData, updateData] = useState([]);
+
+    /* Управление компонентом из родителя */
+    useImperativeHandle(ref, () => ({
+        updateList() {
+            handleUpdate();
+        }
+    }));
+
+    /* Первичная подгрузка игроков */
+    useEffect(() => {
+        handleUpdate();
+    }, []);
+
+    /* Подгрузка игроков */
+    const handleUpdate = () => {
+        fetch(`http://${window.location.hostname}:3010/api/players`)
+            .then((response) => response.json())
+            .then((data) => {
+                updateData(data);
+            })
+            .catch((error) => {
+                console.error('Ошибка при загрузке данных:', error);
+            });
+    };
+
+    return (
+        <>
+            <Accordion defaultActiveKey="0">
+                {playersData.map((item, i) =>
+                    <Accordion.Item eventKey={i} key={i}>
+                        <Accordion.Header><strong>{item[0].value}</strong></Accordion.Header>
+                        <Accordion.Body>
+                            <Form key={i} >
+                                <Row className="mb-3">
+                                    {Array.isArray(item) ? item.map((player, playerKeyId) =>
+                                        <Col xs={12} md={3} className="mb-3" key={playerKeyId}>
+                                            <InputGroup key={playerKeyId} >
+                                                <InputGroup.Text id="inputGroup-sizing-default"> {player.name} </InputGroup.Text>
+                                                <Form.Control
+                                                    size="sm" name={player.name} type={player.type} value={player.value} placeholder={player.name}
+                                                    disabled readOnly
+                                                />
+                                            </InputGroup>
+                                        </Col>
+                                    ) : <p>Неправильно задан игрок id={i}</p>}
+                                </Row>
+                            </Form>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                )}
+            </Accordion>
+            <TimedButton 
+                timedFunction={() => handleUpdate()} text={"Обновить"} delayTime={10}
+            />
         </>
     );
 });
@@ -241,7 +324,7 @@ export const PlayersTurn = forwardRef((props, ref) => {
         handleUpdate();
     };
 
-    /* Следующий ход */
+    /* Новая битва */
     const handleSort = (keyName) => {
         fetch(`http://${window.location.hostname}:3010/api/turn/sort/${keyName}`)
             .then((response) => response.json())
@@ -268,7 +351,7 @@ export const PlayersTurn = forwardRef((props, ref) => {
                     </Col>
                 )}</Row>
             </Form>
-            <div className="d-grid gap-2 mt-3">
+            {/* <div className="d-grid gap-2 mt-3">
                 <Button variant="success" onClick={() => handleTurn()} size="lg">
                     Следующий ход
                 </Button>
@@ -277,12 +360,10 @@ export const PlayersTurn = forwardRef((props, ref) => {
                 <Button variant="warning" onClick={() => handleSort("Инициатива")} size="lg">
                     Начать новую битву
                 </Button>
-            </div>
-            <div className="d-grid gap-2 mt-3">
-                <Button variant="primary" onClick={() => handleUpdate()} size="lg">
-                    Обновить
-                </Button>
-            </div>
+            </div> */}
+            <TimedButton 
+                timedFunction={() => handleUpdate()} text={"Обновить"} delayTime={3}
+            />
         </>
     );
 });

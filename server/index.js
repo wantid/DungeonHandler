@@ -4,6 +4,7 @@ const fs = require('fs');
 var players = require('./players');
 var templates = require('./templates');
 var turn = require('./turn');
+var info = require('./info');
 
 const PORT = process.env.PORT || 3010;
 const app = express();
@@ -24,6 +25,7 @@ app.listen(PORT, () => {
 app.use('/api/players', players);
 app.use('/api/templates', templates);
 app.use('/api/turn', turn);
+app.use('/api/info', info);
 
 app.get('/api/data', (req, res) => {
     const rawData = fs.readFileSync('GameData.json');
