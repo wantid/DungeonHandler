@@ -32,7 +32,7 @@ export const StoryView = () => {
                         <Accordion.Body>
                             <Form key={i} >
                                 <Row className="mb-3">
-                                    <div dangerouslySetInnerHTML={{__html: item.htmlText}}></div>
+                                    {item.content.map((htmlItem, k) => <div key={k} dangerouslySetInnerHTML={{ __html: htmlItem }} />)}
                                 </Row>
                             </Form>
                         </Accordion.Body>
@@ -75,7 +75,7 @@ export const RulesView = () => {
                         <Accordion.Body>
                             <Form key={i} >
                                 <Row className="mb-3">
-                                    <div dangerouslySetInnerHTML={{__html: item.htmlText}}></div>
+                                    {item.content.map((htmlItem, k) => <div key={k} dangerouslySetInnerHTML={{ __html: htmlItem }} />)}
                                 </Row>
                             </Form>
                         </Accordion.Body>
