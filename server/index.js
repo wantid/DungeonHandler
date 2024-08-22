@@ -5,6 +5,7 @@ var players = require('./players');
 var templates = require('./templates');
 var turn = require('./turn');
 var info = require('./info');
+var images = require('./images');
 
 const PORT = process.env.PORT || 3010;
 const app = express();
@@ -26,16 +27,17 @@ app.use('/api/players', players);
 app.use('/api/templates', templates);
 app.use('/api/turn', turn);
 app.use('/api/info', info);
+app.use('/api/images', images);
 
 app.get('/api/data', (req, res) => {
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     const data = JSON.parse(rawData);
     res.json(data);
 });
 
 app.post('/api/data', (req, res) => {
     const newData = req.body;
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     data = newData;
     fs.writeFileSync('GameData.json', JSON.stringify(data));

@@ -5,17 +5,17 @@ const fs = require('fs');
 /* Чтение игрока по id */
 router.get('/id=:id', (req, res) => {
     const playerId = parseInt(req.params.id);
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     const data = JSON.parse(rawData);
     const playerData = data["players"][playerId];
-    res.json(playerData);
+    res.json(playerData ? playerData : []);
 });
 
 /* Запись игрока по id */
 router.post('/id=:id', (req, res) => {
     const playerId = parseInt(req.params.id);
     const newData = req.body;
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     data["players"][playerId] = newData;
     fs.writeFileSync('GameData.json', JSON.stringify(data));
@@ -25,7 +25,7 @@ router.post('/id=:id', (req, res) => {
 /* Удаление игрока по id */
 router.post('/remove/id=:id', (req, res) => {
     const playerId = parseInt(req.params.id);
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     data["players"].splice(playerId, 1);
     fs.writeFileSync('GameData.json', JSON.stringify(data));
@@ -35,7 +35,7 @@ router.post('/remove/id=:id', (req, res) => {
 
 /* Чтение массива игроков */
 router.get('/', (req, res) => {
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     const data = JSON.parse(rawData);
     const playerData = data["players"];
     res.json(playerData);
@@ -43,7 +43,7 @@ router.get('/', (req, res) => {
 
 /* Очистка массива игроков */
 router.get('/reset', (req, res) => {
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     var data = JSON.parse(rawData);
 
     data["players"] = [];
@@ -53,7 +53,7 @@ router.get('/reset', (req, res) => {
 
 /* Создание нового игрока */
 router.post('/create/', (req, res) => {
-    const rawData = fs.readFileSync('GameData.json');
+    const rawData = fs.readFileSync('DATA/json/GameData.json');
     const newData = req.body;
     var data = JSON.parse(rawData);
 

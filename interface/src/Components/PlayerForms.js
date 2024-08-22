@@ -75,7 +75,7 @@ export const PlayerCreate = () => {
                 )}
             </Form.Select>
             <Form onSubmit={handleSubmit}>
-                <Row className="mb-3">
+                <Row className="mb-3" style={{ backgroundColor: '#ffffff90', margin: '.5rem', padding: '1rem', borderRadius: '.5rem' }}>
                     {formData.map((item, i) =>
                         <Col xs={12} md={3} key={i} className="mb-3">
                             <Form.Group as={Col} key={i} >
@@ -264,7 +264,7 @@ export const PlayerView = forwardRef((props, ref) => {
                     </Accordion.Item>
                 )}
             </Accordion>
-            <TimedButton 
+            <TimedButton
                 timedFunction={() => handleUpdate()} text={"Обновить"} delayTime={10}
             />
         </>
@@ -274,30 +274,43 @@ export const PlayerView = forwardRef((props, ref) => {
 export const PlayersTurn = forwardRef((props, ref) => {
     const [playerData, updateData] = useState([]);
     const [playerId, updateTurn] = useState(0);
+    const [currentImage, updateImage] = useState("");
 
     /* Управление компонентом из родителя */
     useImperativeHandle(ref, () => ({
         updateList() {
             handleUpdate();
+            handleUpdateImage();
         }
     }));
 
-    /* Первичная подгрузка игроков */
+    /* Первичная подгрузка хода */
     useEffect(() => {
         handleUpdate();
+        handleUpdateImage();
     }, []);
 
     /* Обновление текущего игрока */
     useEffect(() => {
-        fetch(`http://${window.location.hostname}:3010/api/players/id=${playerId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                updateData(data);
-            })
-            .catch((error) => {
-                console.error('Ошибка при загрузке данных:', error);
-            });
+        handleUpdatePlayer();
     }, [playerId]);
+    async function handleUpdatePlayer() {
+        let response;
+        try {
+            response = await fetch(`http://${window.location.hostname}:3010/api/players/id=${playerId}`);
+        } catch (error) {
+            console.log('error')
+            updateData([]);
+        }
+
+        if (response?.ok) {
+            const data = await response.json();
+            updateData(data);
+        } else {
+            console.log(`error code: ${response?.status}`);
+            updateData([]);
+        }
+    };
 
     /* Подгрузка текущего хода */
     const handleUpdate = () => {
@@ -309,6 +322,26 @@ export const PlayersTurn = forwardRef((props, ref) => {
             .catch((error) => {
                 console.error('Ошибка при загрузке данных:', error);
             });
+    };
+
+    /* Подгрузка текущего изображения */
+    async function handleUpdateImage() {
+        let response;
+        try {
+            response = await fetch(`http://${window.location.hostname}:3010/api/images/current/`);
+        } catch (error) {
+            console.log('error')
+            updateImage("");
+        }
+
+        if (response?.ok) {
+            const data = await response.blob()
+            let imageUrl = URL.createObjectURL(data);
+            updateImage(imageUrl);
+        } else {
+            console.log(`error code: ${response?.status}`);
+            updateImage("");
+        }
     };
 
     /* Следущий ход */
@@ -340,16 +373,18 @@ export const PlayersTurn = forwardRef((props, ref) => {
     return (
         <>
             <Form>
-                <Row className="mb-3">{playerData.map((item, i) =>
-                    <Col xs={12} md={3} className="mb-3" key={i}>
-                        <InputGroup>
-                            <InputGroup.Text id="inputGroup-sizing-default"> {item.name} </InputGroup.Text>
-                            <Form.Control
-                                size="sm" name={item.name} type={item.type} value={item.value} placeholder={item.name} disabled readOnly
-                            />
-                        </InputGroup>
-                    </Col>
-                )}</Row>
+                {currentImage != "" ? <img className='turn__image' src={currentImage} alt="Current location" /> : <></>}
+                <Row className="mb-3">
+                    {playerData.map((item, i) =>
+                        <Col xs={12} md={3} className="mb-3" key={i}>
+                            <InputGroup>
+                                <InputGroup.Text id="inputGroup-sizing-default"> {item.name} </InputGroup.Text>
+                                <Form.Control
+                                    size="sm" name={item.name} type={item.type} value={item.value} placeholder={item.name} disabled readOnly
+                                />
+                            </InputGroup>
+                        </Col>
+                    )}</Row>
             </Form>
             {/* <div className="d-grid gap-2 mt-3">
                 <Button variant="success" onClick={() => handleTurn()} size="lg">
@@ -361,8 +396,8 @@ export const PlayersTurn = forwardRef((props, ref) => {
                     Начать новую битву
                 </Button>
             </div> */}
-            <TimedButton 
-                timedFunction={() => handleUpdate()} text={"Обновить"} delayTime={3}
+            <TimedButton
+                timedFunction={() => { handleUpdate(); handleUpdateImage(); }} text={"Обновить"} delayTime={3}
             />
         </>
     );

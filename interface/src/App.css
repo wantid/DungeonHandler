@@ -36,3 +36,12 @@
 .nav-tabs .nav-link.active {
   border-bottom: solid 4px white !important;
 }
+
+.turn__image {
+  background-size: contain;
+  height: 600px;
+  margin: auto;
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
