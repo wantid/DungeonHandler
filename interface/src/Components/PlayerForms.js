@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Button, Form, Row, Col, InputGroup, Accordion, Dropdown } from 'react-bootstrap';
+import { Button, Form, Row, Col, InputGroup, Accordion } from 'react-bootstrap';
 
 import TimedButton from './TimedButton';
 
