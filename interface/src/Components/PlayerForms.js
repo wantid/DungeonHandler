@@ -248,14 +248,11 @@ export const PlayerView = forwardRef((props, ref) => {
                             <Form key={i} >
                                 <Row className="mb-3">
                                     {Array.isArray(item) ? item.map((player, playerKeyId) =>
-                                        <Col xs={12} md={3} className="mb-3" key={playerKeyId}>
-                                            <InputGroup key={playerKeyId} >
-                                                <InputGroup.Text id="inputGroup-sizing-default"> {player.name} </InputGroup.Text>
-                                                <Form.Control
-                                                    size="sm" name={player.name} type={player.type} value={player.value} placeholder={player.name}
-                                                    disabled readOnly
-                                                />
-                                            </InputGroup>
+                                        <Col xs={6} md={4} lg={3} key={i} className="mb-3" >
+                                            <div className="field">
+                                                {player.name ? <div className="field__title">{player.name}</div> : <></>}
+                                                {player.value ? <div className="field__text">{player.value}</div> : <></>}
+                                            </div>
                                         </Col>
                                     ) : <p>Неправильно задан игрок id={i}</p>}
                                 </Row>
@@ -373,18 +370,24 @@ export const PlayersTurn = forwardRef((props, ref) => {
     return (
         <>
             <Form>
-                {currentImage != "" ? <img className='turn__image' src={currentImage} alt="Current location" /> : <></>}
+                {currentImage != "" ?
+                    <>
+                        <div className='header'>Текущая локация:</div>
+                        <img className='turn__image' src={currentImage} alt="Current location" />
+                    </>
+                    :
+                    <></>}
                 <Row className="mb-3">
+                    {playerData.length > 0 ? <div className='header'>Текущий игрок:</div> : <></>}
                     {playerData.map((item, i) =>
-                        <Col xs={12} md={3} className="mb-3" key={i}>
-                            <InputGroup>
-                                <InputGroup.Text id="inputGroup-sizing-default"> {item.name} </InputGroup.Text>
-                                <Form.Control
-                                    size="sm" name={item.name} type={item.type} value={item.value} placeholder={item.name} disabled readOnly
-                                />
-                            </InputGroup>
+                        <Col xs={6} md={4} lg={3} key={i} className="mb-3" >
+                            <div className="field">
+                                {item.name ? <div className="field__title">{item.name}</div> : <></>}
+                                {item.value ? <div className="field__text">{item.value}</div> : <></>}
+                            </div>
                         </Col>
-                    )}</Row>
+                    )}
+                </Row>
             </Form>
             {/* <div className="d-grid gap-2 mt-3">
                 <Button variant="success" onClick={() => handleTurn()} size="lg">

@@ -72,7 +72,7 @@ const DungeonMaster = () => {
     return (
         <>
             <div className="d-grid gap-2 mb-2">
-                <Header text="Основные команды" />
+                <div className='header'>Основные команды:</div>
                 {/* <Button variant="danger" type="submit" size="lg" onClick={resetPlayers}>
                     Очистить список игроков
                 </Button> */}
@@ -91,7 +91,7 @@ const DungeonMaster = () => {
                         Завершить битву
                     </Button>
                 </div>
-                <Header text="Изображения" />
+                <div className='header'>Изображения:</div>
                 <Row className="mb-3">
                     <Col xs={12} md={3} className="mb-3">
                         <Button variant="danger" onClick={() => updateImage("none.png")} className="container-fluid">

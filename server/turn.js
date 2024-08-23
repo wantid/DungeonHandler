@@ -22,7 +22,7 @@ router.get('/sort/:key', (req, res) => {
     /* Получение массива игроков */
     let playersKeys = data["players"].map((item, itemId) => {
         const _ingame = findKeyByName(item, "В игре");
-        return _ingame ? itemId : -1;
+        return _ingame > 0 ? itemId : -1;
     });
     playersKeys = playersKeys.filter((item) => item > -1);
 
