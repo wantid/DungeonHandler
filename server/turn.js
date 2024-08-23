@@ -5,7 +5,7 @@ const fs = require('fs');
 /* Отсортировать персонажей по параметру */
 router.get('/sort/:key', (req, res) => {
     const keyName = req.params.key;
-    const rawData = fs.readFileSync('DATA/json/GameData.json');
+    const rawData = fs.readFileSync('./DATA/json/GameData.json');
     var data = JSON.parse(rawData);
 
     /* Функция поиска параметра по названию */
@@ -36,13 +36,13 @@ router.get('/sort/:key', (req, res) => {
 
     data["turn"]["turnOrder"] = playersKeys;
     data["turn"]["currentPlayer"] = 0;
-    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
+    fs.writeFileSync('./DATA/json/GameData.json', JSON.stringify(data));
     res.json(playersKeys[0]);
 });
 
 /* Получить айди текущего игрока */
 router.get('/', (req, res) => {
-    const rawData = fs.readFileSync('DATA/json/GameData.json');
+    const rawData = fs.readFileSync('./DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     var currentPlayer = data["turn"]["currentPlayer"];
     const currentPlayerId = data["turn"]["turnOrder"].length > 0 ? data["turn"]["turnOrder"][currentPlayer] : -1;
@@ -51,26 +51,26 @@ router.get('/', (req, res) => {
 
 /* Следующий ход */
 router.get('/next', (req, res) => {
-    const rawData = fs.readFileSync('DATA/json/GameData.json');
+    const rawData = fs.readFileSync('./DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     var currentPlayer = data["turn"]["currentPlayer"];
     const currentPlayerId = data["turn"]["turnOrder"][currentPlayer];
 
     currentPlayer = currentPlayer + 1 >= data["turn"]["turnOrder"].length ? 0 : currentPlayer + 1;
     data["turn"]["currentPlayer"] = currentPlayer;
-    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
+    fs.writeFileSync('./DATA/json/GameData.json', JSON.stringify(data));
     res.json(currentPlayerId);
 });
 
 /* Завершить бой */
 router.get('/end', (req, res) => {
-    const rawData = fs.readFileSync('DATA/json/GameData.json');
+    const rawData = fs.readFileSync('./DATA/json/GameData.json');
     var data = JSON.parse(rawData);
 
     data["turn"]["turnOrder"] = [];
     data["turn"]["currentPlayer"] = 0;
 
-    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
+    fs.writeFileSync('./DATA/json/GameData.json', JSON.stringify(data));
     res.json({ text: "Бой завершен!" });
 });
 

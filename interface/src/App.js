@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <div className='app__background'>    </div>
+      <div className='app__background'/>
       <div className='app__viewport'>
         <BrowserRouter>
           <Routes>
