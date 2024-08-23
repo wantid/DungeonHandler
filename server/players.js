@@ -18,7 +18,7 @@ router.post('/id=:id', (req, res) => {
     const rawData = fs.readFileSync('DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     data["players"][playerId] = newData;
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json({ message: 'Data saved successfully' });
 });
 
@@ -28,7 +28,7 @@ router.post('/remove/id=:id', (req, res) => {
     const rawData = fs.readFileSync('DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     data["players"].splice(playerId, 1);
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json({ message: 'Data saved successfully' });
 });
 
@@ -47,7 +47,7 @@ router.get('/reset', (req, res) => {
     var data = JSON.parse(rawData);
 
     data["players"] = [];
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json({ message: 'Data reset successfully' });
 });
 
@@ -58,7 +58,7 @@ router.post('/create/', (req, res) => {
     var data = JSON.parse(rawData);
 
     data["players"].push(newData);
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json({ message: 'Data saved successfully' });
 });
 

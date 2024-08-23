@@ -36,7 +36,7 @@ router.get('/sort/:key', (req, res) => {
 
     data["turn"]["turnOrder"] = playersKeys;
     data["turn"]["currentPlayer"] = 0;
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json(playersKeys[0]);
 });
 
@@ -58,7 +58,7 @@ router.get('/next', (req, res) => {
 
     currentPlayer = currentPlayer + 1 >= data["turn"]["turnOrder"].length ? 0 : currentPlayer + 1;
     data["turn"]["currentPlayer"] = currentPlayer;
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json(currentPlayerId);
 });
 
@@ -70,7 +70,7 @@ router.get('/end', (req, res) => {
     data["turn"]["turnOrder"] = [];
     data["turn"]["currentPlayer"] = 0;
 
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json({ text: "Бой завершен!" });
 });
 

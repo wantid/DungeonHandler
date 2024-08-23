@@ -40,6 +40,6 @@ app.post('/api/data', (req, res) => {
     const rawData = fs.readFileSync('DATA/json/GameData.json');
     var data = JSON.parse(rawData);
     data = newData;
-    fs.writeFileSync('GameData.json', JSON.stringify(data));
+    fs.writeFileSync('DATA/json/GameData.json', JSON.stringify(data));
     res.json({ message: 'Data saved successfully' });
 });
