@@ -56,26 +56,9 @@
   margin-bottom: 1rem;
 }
 
-.field {
-  background-color: #cfe2ff;
-  border-radius: .5rem;
-  padding: .1rem;
-}
-
-.field__title, .field__text, .field__dsc {
-  font-size: small;
-}
-
-.field__title, .field__text {
-  width: 50%;
-  display: inline;
-  padding: .25rem;
-}
-
-.field__title {
-  font-weight: 500;
-}
-
-.field__text {
-  font-weight: 900;
+.container {
+  background-color: #ffffff2f;
+  border-radius: 1rem;
+  padding: .5rem;
+  margin-bottom: 1rem;
 }

@@ -22,6 +22,20 @@ router.post('/id=:id', (req, res) => {
     res.json({ message: 'Data saved successfully' });
 });
 
+/* Изменение параметра игрока */
+router.post('/setkey/id=:id', (req, res) => {
+    const playerId = parseInt(req.params.id);
+    const newData = req.body;
+    const keyValue = newData.value, keyPath = newData.path;
+
+    const rawData = fs.readFileSync('./DATA/json/GameData.json');
+    var data = JSON.parse(rawData);
+    eval(`data["players"][playerId]${keyPath}["value"]="${keyValue}"`);
+
+    fs.writeFileSync('./DATA/json/GameData.json', JSON.stringify(data));
+    res.json({ message: 'Data saved successfully' });
+});
+
 /* Удаление игрока по id */
 router.post('/remove/id=:id', (req, res) => {
     const playerId = parseInt(req.params.id);

@@ -30,7 +30,7 @@ function App() {
                 onSelect={() => { playerViewRef.current.updateList(); playerTurnRef.current.updateList(); }}
               >
                 <Tab eventKey="players" title="Персонажи">
-                  <PlayerView ref={playerViewRef} />
+                  <PlayersList ref={playerViewRef} />
                 </Tab>
                 <Tab eventKey="turn" title="Ход игры">
                   <PlayersTurn ref={playerTurnRef} />
@@ -49,8 +49,8 @@ function App() {
                 <Tab eventKey="createPlayer" title="Создать персонажа">
                   <PlayerCreate />
                 </Tab>
-                <Tab eventKey="players" title="Изменить данные персонажей">
-                  <PlayersList ref={dmListRef} />
+                <Tab eventKey="players" title="Персонажи" >
+                  <PlayersList ref={dmListRef} ismaster={true}/>
                 </Tab>
                 <Tab eventKey="turn" title="Ход игры">
                   <PlayersTurn ref={dmTurnRef} />
