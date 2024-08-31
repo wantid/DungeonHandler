@@ -7,6 +7,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 
 import { PlayerCreate, PlayersList, PlayersTurn, PlayerView } from './Components/PlayerForms';
 import DungeonMaster from './Components/DungeonMaster';
+import MapData from './Components/MapData';
 import { StoryView, RulesView } from './Components/InfoData';
 
 
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <>
-      <div className='app__background'/>
+      <div className='app__background' />
       <div className='app__viewport'>
         <BrowserRouter>
           <Routes>
@@ -38,6 +39,9 @@ function App() {
                 <Tab eventKey="rulesView" title="Правила">
                   <RulesView />
                 </Tab>
+                <Tab eventKey="mapData" title="Карта">
+                  <MapData />
+                </Tab>
               </Tabs>
             } />
             <Route path="dm" element={
@@ -50,10 +54,13 @@ function App() {
                   <PlayerCreate />
                 </Tab>
                 <Tab eventKey="players" title="Персонажи" >
-                  <PlayersList ref={dmListRef} ismaster={true}/>
+                  <PlayersList ref={dmListRef} ismaster={true} />
                 </Tab>
                 <Tab eventKey="turn" title="Ход игры">
                   <PlayersTurn ref={dmTurnRef} />
+                </Tab>
+                <Tab eventKey="mapData" title="Карта">
+                  <MapData />
                 </Tab>
                 <Tab eventKey="dm" title="ДМ">
                   <DungeonMaster />

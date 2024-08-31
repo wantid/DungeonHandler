@@ -6,6 +6,7 @@ var templates = require('./templates');
 var turn = require('./turn');
 var info = require('./info');
 var images = require('./images');
+var map = require('./map');
 
 const PORT = process.env.PORT || 3010;
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/templates', templates);
 app.use('/api/turn', turn);
 app.use('/api/info', info);
 app.use('/api/images', images);
+app.use('/api/map', map);
 
 app.get('/api/data', (req, res) => {
     const rawData = fs.readFileSync('./DATA/json/GameData.json');
