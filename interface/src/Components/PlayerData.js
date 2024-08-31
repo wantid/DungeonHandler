@@ -1,8 +1,10 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Button, Form, Row, Col, InputGroup, Accordion } from 'react-bootstrap';
+import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
+import { Button, Form, Row, Col, InputGroup, Accordion, FormGroup } from 'react-bootstrap';
 
-const PlayerData = forwardRef((props, ref) => { //(playerId, canRemove )
+const PlayerData = forwardRef((props, ref) => {
     const [playerData, updateData] = useState([]);
+    const [pausedUpdate, setPauseUpdate] = useState(false);
+    const [lasteKeyChange, setLasteKeyChange] = useState("");
 
     /* Управление компонентом из родителя */
     useImperativeHandle(ref, () => ({
@@ -16,6 +18,7 @@ const PlayerData = forwardRef((props, ref) => { //(playerId, canRemove )
         handleUpdatePlayer();
     }, [props.playerId]);
     async function handleUpdatePlayer() {
+        if (pausedUpdate) return;
         let response;
         try {
             response = await fetch(`http://${window.location.hostname}:3010/api/players/id=${props.playerId}`);
@@ -34,6 +37,7 @@ const PlayerData = forwardRef((props, ref) => { //(playerId, canRemove )
     };
 
     /* Обновление локальных данных */
+    const sendDataTimeout = useRef();
     const handleChange = (keyPath, keyValue) => {
         try {
             if (!(keyPath instanceof Array)) return;
@@ -43,10 +47,16 @@ const PlayerData = forwardRef((props, ref) => { //(playerId, canRemove )
             eval(`updatedPlayer${stringPath}["value"]="${keyValue}"`);
 
             updateData(updatedPlayer);
-            handleUpdatePlayerField({ path: stringPath, value: keyValue });
+            setPauseUpdate(true);
+            let nowKey = JSON.parse(keyPath.pop());
+            if (lasteKeyChange == nowKey) clearTimeout(sendDataTimeout.current);
+            setLasteKeyChange(nowKey);
+            sendDataTimeout.current = setTimeout(() => {
+                handleUpdatePlayerField({ path: stringPath, value: keyValue });
+                setPauseUpdate(false);
+            }, 1000);
         } catch (e) {
             console.log(e);
-            console.log(keyPath);
         }
     };
 
@@ -122,7 +132,7 @@ function drawForm(in_elementStruct, in_key, in_handleChange, in_disabled, in_pat
                     </Accordion>
                 </Col>;
             default:
-                return <Col xs={12} md={3} className="mb-3" key={in_key}>
+                return <Form.Group xs={in_elementStruct.long ? 12 : 6} md={in_elementStruct.long ? 6 : 2} className="mb-3" key={in_key} as={Col}>
                     <InputGroup key={in_key} >
                         <InputGroup.Text id="inputGroup-sizing-default"> {in_elementStruct.name} </InputGroup.Text>
                         <Form.Control onChange={(e) => { console.log(in_path); in_handleChange(in_path, e.target.value) }}
@@ -132,9 +142,13 @@ function drawForm(in_elementStruct, in_key, in_handleChange, in_disabled, in_pat
                             value={in_elementStruct.value}
                             placeholder={in_elementStruct.name}
                             disabled={in_disabled}
+                            as={in_elementStruct.long ? "textarea" : "input"}
                         />
                     </InputGroup>
-                </Col>;
+                    <Form.Text className="text-muted">
+                        {in_elementStruct.dsc}
+                    </Form.Text>
+                </Form.Group>;
         }
     } catch (e) {
         console.log('Не удалось создать элемент формы:');
