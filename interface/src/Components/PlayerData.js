@@ -98,18 +98,19 @@ const PlayerData = forwardRef((props, ref) => {
         <Form className='container'>
             <Row className="mb-3">
                 {Array.isArray(playerData) ? playerData.map((playerKey, playerKeyId) =>
-                    drawForm(playerKey, playerKeyId, handleChange, false, [props.playerId, playerKeyId])
+                    drawForm(playerKey, playerKeyId, handleChange, false, [props.playerId, playerKeyId], props.isMaster)
                 ) : <p>Неправильно задан игрок id={props.playerId}</p>}
             </Row>
-            {props.canRemove ? <Button variant="danger" onClick={handleRemovePlayer} size="lg">
+            {props.isMaster ? <Button variant="danger" onClick={handleRemovePlayer} size="lg">
                 Удалить персонажа
             </Button> : <></>}
         </Form>
     );
 });
 
-function drawForm(in_elementStruct, in_key, in_handleChange, in_disabled, in_path) {
+function drawForm(in_elementStruct, in_key, in_handleChange, in_disabled, in_path, in_master) {
     try {
+        if (in_elementStruct["is_hidden"] && !in_master) return <></>;
         switch (in_elementStruct.type) {
             case "container":
                 in_path.push("value");
@@ -123,7 +124,8 @@ function drawForm(in_elementStruct, in_key, in_handleChange, in_disabled, in_pat
                                         drawForm(
                                             child, childId,
                                             in_handleChange, in_disabled,
-                                            in_path.concat([childId])
+                                            in_path.concat([childId]),
+                                            in_master
                                         )
                                     ) : <p>Неправильно задан игрок id={in_key}</p>}
                                 </Row>
@@ -132,7 +134,7 @@ function drawForm(in_elementStruct, in_key, in_handleChange, in_disabled, in_pat
                     </Accordion>
                 </Col>;
             default:
-                return <Form.Group xs={in_elementStruct.long ? 12 : 6} md={in_elementStruct.long ? 6 : 2} className="mb-3" key={in_key} as={Col}>
+                return <Form.Group xs={in_elementStruct.long ? 12 : 6} md={in_elementStruct.long ? 12 : 2} className="mb-3" key={in_key} as={Col}>
                     <InputGroup key={in_key} >
                         <InputGroup.Text id="inputGroup-sizing-default"> {in_elementStruct.name} </InputGroup.Text>
                         <Form.Control onChange={(e) => { console.log(in_path); in_handleChange(in_path, e.target.value) }}

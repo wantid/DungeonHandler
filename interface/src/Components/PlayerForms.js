@@ -157,7 +157,7 @@ export const PlayersList = forwardRef((props, ref) => {
                     {playersData}
                 </Form.Select>
             </div>
-            <PlayerData ref={playerDataRef} canRemove={props.ismaster} playerId={selectedPlayer} />
+            <PlayerData ref={playerDataRef} isMaster={props.ismaster} playerId={selectedPlayer} />
             <div className="d-grid gap-2 mt-3">
                 <TimedButton
                     timedFunction={() => handleUpdate()} text={"Обновить"} delayTime={3}

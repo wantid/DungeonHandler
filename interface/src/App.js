@@ -42,9 +42,6 @@ function App() {
                 <Tab eventKey="rulesView" title="Правила">
                   <RulesView />
                 </Tab>
-                <Tab eventKey="mapData" title="Карта">
-                  <MapData />
-                </Tab>
               </Tabs>
             } />
             <Route path="dm" element={

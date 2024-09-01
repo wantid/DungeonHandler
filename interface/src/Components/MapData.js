@@ -21,6 +21,8 @@ const MapData = () => {
                 for (var key in content) {
                     let elementStruct = content[key];
                     const element = svgElement.getElementById(key);
+                    svgElement.setAttribute("width", "600");
+                    svgElement.setAttribute("style", "display:block;margin:auto");
 
                     if (element) {
                         // Удаление предыдущих слушателей
@@ -38,7 +40,7 @@ const MapData = () => {
                                 case "character":
                                     setModalContent(
                                         <>
-                                            <PlayerData ref={playerDataRef} canRemove={false} playerId={elementStruct["value"]} />
+                                            <PlayerData ref={playerDataRef} isMaster={true} playerId={elementStruct["value"]} />
                                             <TimedButton
                                                 timedFunction={() => { if (playerDataRef.current) playerDataRef.current.handleUpdate() }} text={"Обновить"} delayTime={3}
                                             />
@@ -113,6 +115,7 @@ const MapData = () => {
                 </Modal.Footer>
             </Modal>
             <div
+                className='container__image'
                 ref={svgContainerRef}
                 dangerouslySetInnerHTML={{ __html: svgContent }}
             />
