@@ -122,7 +122,25 @@ export const PlayersList = forwardRef((props, ref) => {
         fetch(`http://${window.location.hostname}:3010/api/players`)
             .then((response) => response.json())
             .then((data) => {
-                updateData(data);
+                let insertData;
+                if (props.playersFilter) {
+                    /* Фильтрация игроков */
+                    insertData = data.map((player, playerId) => {
+                        /* Перебор ключей игроков */
+                        for (var i = 0; i < player.length; i++) {
+                            if (player[i]["name"] == props.playersFilter["key"]) {
+                                return props.playersFilter["filter"](player[i]["value"]) ?
+                                    <option key={playerId} value={playerId}>{player[0]["value"]}</option> : <></>;
+                            }
+                        }
+                        return <></>;
+                    });
+                } else {
+                    insertData = data.map((player, playerId) =>
+                        <option key={playerId} value={playerId}>{player[0]["value"]}</option>
+                    );
+                }
+                updateData(insertData);
             })
             .catch((error) => {
                 console.error('Ошибка при загрузке данных:', error);
@@ -136,9 +154,7 @@ export const PlayersList = forwardRef((props, ref) => {
                 <Form.Select onChange={e => {
                     selectPlayer(e.target.value);
                 }}>
-                    {playersData.map((item, i) =>
-                        <option key={i} value={i}>{item[0].value}</option>
-                    )}
+                    {playersData}
                 </Form.Select>
             </div>
             <PlayerData ref={playerDataRef} canRemove={props.ismaster} playerId={selectedPlayer} />

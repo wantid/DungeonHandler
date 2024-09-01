@@ -31,7 +31,10 @@ function App() {
                 onSelect={() => { playerViewRef.current.updateList(); playerTurnRef.current.updateList(); }}
               >
                 <Tab eventKey="players" title="Персонажи">
-                  <PlayersList ref={playerViewRef} />
+                  <PlayersList
+                    ref={playerViewRef}
+                    playersFilter={{ key: "В игре", filter: (keyValue) => { return keyValue > 0; } }}
+                  />
                 </Tab>
                 <Tab eventKey="turn" title="Ход игры">
                   <PlayersTurn ref={playerTurnRef} />
