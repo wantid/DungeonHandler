@@ -130,14 +130,14 @@ export const PlayersList = forwardRef((props, ref) => {
                         for (var i = 0; i < player.length; i++) {
                             if (player[i]["name"] == props.playersFilter["key"]) {
                                 return props.playersFilter["filter"](player[i]["value"]) ?
-                                    <option key={playerId} value={playerId}>{player[0]["value"]}</option> : <></>;
+                                    <option key={playerId} value={playerId}>{`[${playerId}] ${player[0]["value"]}`}</option> : <></>;
                             }
                         }
                         return <></>;
                     });
                 } else {
                     insertData = data.map((player, playerId) =>
-                        <option key={playerId} value={playerId}>{player[0]["value"]}</option>
+                        <option key={playerId} value={playerId}>{`[${playerId}] ${player[0]["value"]}`}</option>
                     );
                 }
                 updateData(insertData);
