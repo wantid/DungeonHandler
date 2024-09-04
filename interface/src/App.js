@@ -8,6 +8,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import { PlayerCreate, PlayersList, PlayersTurn, PlayerView } from './Components/PlayerForms';
 import DungeonMaster from './Components/DungeonMaster';
 import MapData from './Components/MapData';
+import MapEditor from './Components/MapEditor';
 import { StoryView, RulesView } from './Components/InfoData';
 
 
@@ -70,6 +71,9 @@ function App() {
                 </Tab>
                 <Tab eventKey="rulesView" title="Правила">
                   <RulesView />
+                </Tab>
+                <Tab eventKey="mapEditor" title="Редактор карт">
+                  <MapEditor />
                 </Tab>
               </Tabs>
             } />

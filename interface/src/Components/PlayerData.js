@@ -134,7 +134,7 @@ function drawForm(in_elementStruct, in_key, in_handleChange, in_disabled, in_pat
                     </Accordion>
                 </Col>;
             default:
-                return <Form.Group xs={in_elementStruct.long ? 12 : 6} md={in_elementStruct.long ? 12 : 2} className="mb-3" key={in_key} as={Col}>
+                return <Form.Group xs={in_elementStruct.long ? 12 : 6} lg={in_elementStruct.long ? 12 : 2} className="mb-3" key={in_key} as={Col}>
                     <InputGroup key={in_key} >
                         <InputGroup.Text id="inputGroup-sizing-default"> {in_elementStruct.name} </InputGroup.Text>
                         <Form.Control onChange={(e) => { console.log(in_path); in_handleChange(in_path, e.target.value) }}

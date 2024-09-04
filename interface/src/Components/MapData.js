@@ -75,11 +75,17 @@ const MapData = () => {
         // Загрузка SVG с сервера
         fetch(`http://${window.location.hostname}:3010/api/map/image/`)
             .then(response => response.text())
-            .then(data => setSvgContent(data));
+            .then(data => setSvgContent(data))
+            .catch((error) => {
+                console.error('Ошибка при обновлении данных:', error);
+            });
         // Загрузка контента с сервера
         fetch(`http://${window.location.hostname}:3010/api/map/current/`)
             .then(response => response.json())
-            .then(data => setContent(data));
+            .then(data => setContent(data))
+            .catch((error) => {
+                console.error('Ошибка при обновлении данных:', error);
+            });
     };
 
     /* Изменить текущую карту */
@@ -122,6 +128,9 @@ const MapData = () => {
             <TimedButton
                 timedFunction={() => { handleUpdate() }} text={"Обновить"} delayTime={120}
             />
+            <div className="d-grid gap-2 mt-3">
+                <Button onClick={() => handleChangeMap(0)}>Вернуться на главную карту</Button>
+            </div>
         </>
     );
 };
